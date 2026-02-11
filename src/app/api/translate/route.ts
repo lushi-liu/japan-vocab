@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
-  const { text } = await req.json();
+  const { text, targetLang } = await req.json();
 
   try {
     const response = await fetch(`https://api-free.deepl.com/v2/translate`, {
@@ -12,7 +12,7 @@ export async function POST(req: Request) {
       },
       body: new URLSearchParams({
         text,
-        target_lang: 'JA',
+        target_lang: targetLang, // Now dynamic: 'JA' or 'EN'
       }),
     });
 

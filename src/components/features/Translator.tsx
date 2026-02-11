@@ -7,6 +7,7 @@ export default function Translator() {
   const [input, setInput] = useState('');
   const [result, setResult] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isEnglishSource, setIsEnglishSource] = useState(true);
 
   const handleTranslate = async () => {
     if (!input) return;
@@ -15,7 +16,10 @@ export default function Translator() {
     try {
       const res = await fetch('/api/translate', {
         method: 'POST',
-        body: JSON.stringify({ text: input }),
+        body: JSON.stringify({
+          text: input,
+          targetLang: isEnglishSource ? 'JA' : 'EN',
+        }),
       });
       const data = await res.json();
       setResult(data.translation);
@@ -26,41 +30,77 @@ export default function Translator() {
     }
   };
 
+  const swapLanguages = () => {
+    setIsEnglishSource(!isEnglishSource);
+    setInput(result);
+    setResult('');
+  };
+
   return (
     <div className="w-full max-w-md space-y-6">
-      <div className="flex flex-col gap-4">
-        <div className="text-left">
-          <label className="text-sm font-semibold text-slate-600">
-            English
-          </label>
-          <input
-            type="text"
-            className="mt-1 w-full rounded-xl border border-slate-200 p-3 focus:ring-2 focus:ring-slate-900 focus:outline-none"
-            placeholder="e.g. Morning"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-          />
+      <div className="flex flex-col gap-2">
+        <div className="flex items-center justify-between px-1">
+          <span className="text-sm font-bold tracking-wider text-slate-400 uppercase">
+            {isEnglishSource ? 'English' : 'Japanese'}
+          </span>
+          <button
+            onClick={swapLanguages}
+            className="rounded-full p-2 transition-colors hover:bg-slate-100"
+            title="Swap Languages"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="text-slate-600"
+            >
+              <path d="m7 21-4-4 4-4" />
+              <path d="M3 17h18" />
+              <path d="m17 3 4 4-4 4" />
+              <path d="M21 7H3" />
+            </svg>
+          </button>
+          <span className="text-sm font-bold tracking-wider text-slate-400 uppercase">
+            {isEnglishSource ? 'Japanese' : 'English'}
+          </span>
         </div>
 
-        <div className="text-left">
-          <label className="text-sm font-semibold text-slate-600">
-            Japanese Translation
-          </label>
-          <div className="mt-1 min-h-[56px] w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-lg font-medium">
+        <textarea
+          className="h-32 w-full resize-none rounded-2xl border border-slate-200 p-4 focus:ring-2 focus:ring-slate-900 focus:outline-none"
+          placeholder={isEnglishSource ? 'Type English...' : '日本語を入力...'}
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+        />
+
+        <div className="relative">
+          <div className="min-h-[128px] w-full rounded-2xl border border-slate-200 bg-slate-50 p-4 text-lg font-medium text-slate-900">
             {loading ? (
-              <span className="text-slate-400">Thinking...</span>
+              <span className="animate-pulse text-slate-400">
+                Translating...
+              </span>
             ) : (
-              result || <span className="text-slate-300">...</span>
+              result
             )}
           </div>
         </div>
       </div>
 
-      <div className="flex flex-col gap-2">
-        <Button onClick={handleTranslate} variant="secondary">
+      <div className="flex flex-col gap-3">
+        <Button onClick={handleTranslate} variant="primary">
           Translate
         </Button>
-        <Button onClick={() => console.log('Saving...')}>Add Word</Button>
+        <Button
+          onClick={() => console.log('Saving to DB...')}
+          variant="secondary"
+        >
+          Add to Collection
+        </Button>
       </div>
     </div>
   );
