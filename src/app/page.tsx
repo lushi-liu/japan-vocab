@@ -1,6 +1,6 @@
 'use client';
 
-import Button from '@/src/components/ui/Button';
+import WordForm from '@/src/components/features/WordForm';
 
 export default function HomePage() {
   return (
@@ -11,22 +11,11 @@ export default function HomePage() {
             Japan Vocab <span className="text-red-500">日本語</span>
           </h1>
           <p className="text-slate-500">
-            Master your Japanese vocabulary, one word at a time.
+            Translate and save new words to your deck.
           </p>
         </header>
 
-        <div className="pt-4">
-          <Button onClick={() => console.log('Open Modal')}>
-            <span className="mr-2 text-lg">+</span>
-            Add Word
-          </Button>
-        </div>
-
-        <footer className="border-t border-slate-50 pt-8">
-          <p className="text-xs font-medium tracking-widest text-slate-400 uppercase">
-            Your list is currently empty
-          </p>
-        </footer>
+        <WordForm />
       </div>
     </main>
   );
