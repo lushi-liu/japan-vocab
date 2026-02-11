@@ -36,6 +36,27 @@ export default function Translator() {
     setResult('');
   };
 
+  const saveWord = async () => {
+    if (!result || !input) return;
+
+    const res = await fetch('/api/words', {
+      method: 'POST',
+      body: JSON.stringify({
+        english: isEnglishSource ? input : result,
+        japanese: isEnglishSource ? result : input,
+      }),
+    });
+
+    if (res.ok) {
+      alert('Word added!');
+      setResult('');
+      setInput('');
+    } else {
+      const data = await res.json();
+      alert(data.error || 'Failed to save');
+    }
+  };
+
   return (
     <div className="w-full max-w-md space-y-6">
       <div className="flex flex-col gap-2">
@@ -95,10 +116,7 @@ export default function Translator() {
         <Button onClick={handleTranslate} variant="primary">
           Translate
         </Button>
-        <Button
-          onClick={() => console.log('Saving to DB...')}
-          variant="secondary"
-        >
+        <Button onClick={saveWord} variant="secondary">
           Add to Collection
         </Button>
       </div>

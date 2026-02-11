@@ -1,0 +1,15 @@
+datasource db {
+  provider = "postgresql"
+  // url line removed
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Word {
+  id        String   @id @default(cuid())
+  english   String
+  japanese  String   @unique
+  createdAt DateTime @default(now())
+}
