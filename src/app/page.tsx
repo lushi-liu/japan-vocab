@@ -1,4 +1,7 @@
 'use client';
+
+import Button from '@/src/components/ui/Button';
+
 export default function HomePage() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-slate-50 p-6">
@@ -13,13 +16,10 @@ export default function HomePage() {
         </header>
 
         <div className="pt-4">
-          <button
-            className="group relative inline-flex items-center justify-center rounded-full bg-slate-900 px-8 py-3 font-semibold text-white transition-all duration-200 hover:bg-slate-800 focus:ring-2 focus:ring-slate-900 focus:ring-offset-2 focus:outline-none"
-            onClick={() => alert('Add word logic coming soon!')}
-          >
+          <Button onClick={() => console.log('Open Modal')}>
             <span className="mr-2 text-lg">+</span>
             Add Word
-          </button>
+          </Button>
         </div>
 
         <footer className="border-t border-slate-50 pt-8">
