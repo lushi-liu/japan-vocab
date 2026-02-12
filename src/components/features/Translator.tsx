@@ -2,10 +2,12 @@
 
 import { useState } from 'react';
 import Button from '@/src/components/ui/Button';
+import { FuriganaText } from './FuriganaText';
 
 export default function Translator() {
   const [input, setInput] = useState('');
   const [result, setResult] = useState('');
+  const [reading, setReading] = useState('');
   const [loading, setLoading] = useState(false);
   const [isEnglishSource, setIsEnglishSource] = useState(true);
 
@@ -23,6 +25,7 @@ export default function Translator() {
       });
       const data = await res.json();
       setResult(data.translation);
+      setReading(data.reading || '');
     } catch (err) {
       setResult('Error translating.');
     } finally {
@@ -34,6 +37,7 @@ export default function Translator() {
     setIsEnglishSource(!isEnglishSource);
     setInput(result);
     setResult('');
+    setReading('');
   };
 
   const saveWord = async () => {
@@ -44,6 +48,7 @@ export default function Translator() {
       body: JSON.stringify({
         english: isEnglishSource ? input : result,
         japanese: isEnglishSource ? result : input,
+        reading: isEnglishSource ? reading : '',
       }),
     });
 
@@ -51,6 +56,7 @@ export default function Translator() {
       alert('Word added!');
       setResult('');
       setInput('');
+      setReading('');
     } else {
       const data = await res.json();
       alert(data.error || 'Failed to save');
@@ -100,11 +106,13 @@ export default function Translator() {
         />
 
         <div className="relative">
-          <div className="min-h-[128px] w-full rounded-2xl border border-slate-200 bg-slate-50 p-4 text-lg font-medium text-slate-900">
+          <div className="flex min-h-[128px] w-full items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 p-4 text-3xl font-medium text-slate-900">
             {loading ? (
-              <span className="animate-pulse text-slate-400">
+              <span className="animate-pulse text-lg text-slate-400">
                 Translating...
               </span>
+            ) : isEnglishSource && reading ? (
+              <FuriganaText kanji={result} reading={reading} />
             ) : (
               result
             )}

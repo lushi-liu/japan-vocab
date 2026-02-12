@@ -11,5 +11,8 @@ model Word {
   id        String   @id @default(cuid())
   english   String
   japanese  String   @unique
+  reading   String?  // Add this field to store the hiragana/furigana
   createdAt DateTime @default(now())
+
+  @@map("words")
 }
