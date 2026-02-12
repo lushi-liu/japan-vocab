@@ -2,7 +2,18 @@ import { NextResponse } from 'next/server';
 import kuromoji from 'kuromoji';
 import path from 'path';
 
-const getReading = (text: string): Promise<string> => {
+const isKanji = (ch: string) => {
+  return !!ch.match(/[\u4e00-\u9faf\u3400-\u4dbf]/);
+};
+
+const toHiragana = (katakana: string) => {
+  return katakana.replace(/[\u30a1-\u30f6]/g, (match) => {
+    const chr = match.charCodeAt(0) - 0x60;
+    return String.fromCharCode(chr);
+  });
+};
+
+const getSmartReading = (text: string): Promise<any[]> => {
   return new Promise((resolve, reject) => {
     kuromoji
       .builder({
@@ -11,16 +22,17 @@ const getReading = (text: string): Promise<string> => {
       .build((err, tokenizer) => {
         if (err) return reject(err);
         const tokens = tokenizer.tokenize(text);
-        const reading = tokens.map((t) => t.reading || t.surface_form).join('');
-        resolve(reading);
-      });
-  });
-};
 
-const toHiragana = (katakana: string) => {
-  return katakana.replace(/[\u30a1-\u30f6]/g, (match) => {
-    const chr = match.charCodeAt(0) - 0x60;
-    return String.fromCharCode(chr);
+        const processed = tokens.map((token) => {
+          const hasKanji = [...token.surface_form].some(isKanji);
+          return {
+            surface: token.surface_form,
+            reading: hasKanji ? toHiragana(token.reading || '') : null,
+          };
+        });
+
+        resolve(processed);
+      });
   });
 };
 
@@ -34,22 +46,18 @@ export async function POST(req: Request) {
         Authorization: `DeepL-Auth-Key ${process.env.DEEPL_API_KEY}`,
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: new URLSearchParams({
-        text,
-        target_lang: targetLang,
-      }),
+      body: new URLSearchParams({ text, target_lang: targetLang }),
     });
 
     const data = await response.json();
     const translation = data.translations[0].text;
 
-    let reading = '';
+    let readingData = [];
     if (targetLang === 'JA') {
-      const rawReading = await getReading(translation);
-      reading = toHiragana(rawReading);
+      readingData = await getSmartReading(translation);
     }
 
-    return NextResponse.json({ translation, reading });
+    return NextResponse.json({ translation, readingData });
   } catch (error) {
     return NextResponse.json({ error: 'Translation failed' }, { status: 500 });
   }

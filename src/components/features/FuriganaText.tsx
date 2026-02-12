@@ -4,6 +4,14 @@ interface FuriganaProps {
 }
 
 export function FuriganaText({ kanji, reading }: FuriganaProps) {
+  const isKanji = (char: string) => {
+    return /[\u4e00-\u9faf]/.test(char);
+  };
+
+  if (!kanji.split('').some(isKanji)) {
+    return <span>{kanji}</span>;
+  }
+
   return (
     <ruby className="ruby-text">
       {kanji}

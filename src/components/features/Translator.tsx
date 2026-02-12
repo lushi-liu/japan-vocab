@@ -2,12 +2,11 @@
 
 import { useState } from 'react';
 import Button from '@/src/components/ui/Button';
-import { FuriganaText } from './FuriganaText';
 
 export default function Translator() {
   const [input, setInput] = useState('');
   const [result, setResult] = useState('');
-  const [reading, setReading] = useState('');
+  const [readingData, setReadingData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [isEnglishSource, setIsEnglishSource] = useState(true);
 
@@ -25,7 +24,7 @@ export default function Translator() {
       });
       const data = await res.json();
       setResult(data.translation);
-      setReading(data.reading || '');
+      setReadingData(data.readingData || []);
     } catch (err) {
       setResult('Error translating.');
     } finally {
@@ -37,7 +36,7 @@ export default function Translator() {
     setIsEnglishSource(!isEnglishSource);
     setInput(result);
     setResult('');
-    setReading('');
+    setReadingData([]);
   };
 
   const saveWord = async () => {
@@ -48,7 +47,7 @@ export default function Translator() {
       body: JSON.stringify({
         english: isEnglishSource ? input : result,
         japanese: isEnglishSource ? result : input,
-        reading: isEnglishSource ? reading : '',
+        reading: isEnglishSource ? JSON.stringify(readingData) : '',
       }),
     });
 
@@ -56,7 +55,7 @@ export default function Translator() {
       alert('Word added!');
       setResult('');
       setInput('');
-      setReading('');
+      setReadingData([]);
     } else {
       const data = await res.json();
       alert(data.error || 'Failed to save');
@@ -73,7 +72,6 @@ export default function Translator() {
           <button
             onClick={swapLanguages}
             className="rounded-full p-2 transition-colors hover:bg-slate-100"
-            title="Swap Languages"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -111,10 +109,25 @@ export default function Translator() {
               <span className="animate-pulse text-lg text-slate-400">
                 Translating...
               </span>
-            ) : isEnglishSource && reading ? (
-              <FuriganaText kanji={result} reading={reading} />
+            ) : isEnglishSource && readingData.length > 0 ? (
+              <div className="flex flex-wrap justify-center gap-x-1">
+                {readingData.map((item, idx) => (
+                  <ruby key={idx}>
+                    {item.surface}
+                    {item.reading && (
+                      <>
+                        <rp>(</rp>
+                        <rt className="text-[0.45em] font-normal text-blue-600">
+                          {item.reading}
+                        </rt>
+                        <rp>)</rp>
+                      </>
+                    )}
+                  </ruby>
+                ))}
+              </div>
             ) : (
-              result
+              <span>{result}</span>
             )}
           </div>
         </div>
