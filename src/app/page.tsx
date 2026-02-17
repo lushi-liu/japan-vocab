@@ -4,7 +4,7 @@ import Translator from '@/src/components/features/Translator';
 
 export default function HomePage() {
   return (
-    <main className="flex min-h-screen items-center justify-center p-6">
+    <main className="flex min-h-screen items-center justify-center p-6 pt-24">
       <div className="w-full max-w-xl">
         <header className="mb-12 text-center">
           <h1 className="text-4xl font-light tracking-tight text-white">
