@@ -3,15 +3,16 @@
 @tailwind utilities;
 
 :root {
-  --background: #d3ffda;
-  --foreground: #1f4a76;
+  --background: #e1e3e9;
+  --foreground: #0d4278;
 }
 
 body {
   color: var(--foreground);
-  background: var(--background);
+  background: radial-gradient(circle at top left, #739af7, #67eb69);
   font-family: 'Inter', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
 }
 
 ruby {
@@ -22,6 +23,23 @@ ruby {
 rt {
   font-family: inherit;
   font-weight: 500;
-  letter-spacing: 0.025em;
-  padding-bottom: 0.1rem;
+  letter-spacing: 0.05em;
+  padding-bottom: 0.2rem;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #020617;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #74c9be;
 }

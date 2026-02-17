@@ -12,15 +12,16 @@ export default function Button({
   variant = 'primary',
 }: ButtonProps) {
   const styles = {
-    primary: 'bg-slate-900 text-white hover:bg-slate-800',
+    primary:
+      'bg-gradient-to-br from-teal-500 to-blue-600 text-white shadow-lg shadow-teal-500/10 hover:shadow-teal-500/20 hover:scale-[1.02]',
     secondary:
-      'bg-white text-slate-900 border border-slate-200 hover:bg-slate-50',
+      'bg-transparent border border-slate-700 text-slate-400 hover:border-slate-500 hover:text-white',
   };
 
   return (
     <button
       onClick={onClick}
-      className={`${styles[variant]} inline-flex items-center justify-center rounded-full px-8 py-3 font-semibold transition-all duration-200 focus:ring-2 focus:ring-slate-900 focus:ring-offset-2 focus:outline-none`}
+      className={`${styles[variant]} inline-flex items-center justify-center rounded-full px-8 py-2.5 text-sm font-bold transition-all duration-300 focus:outline-none active:scale-95`}
     >
       {children}
     </button>

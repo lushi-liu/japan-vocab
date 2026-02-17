@@ -7,38 +7,29 @@ export default function Navbar() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed top-0 left-0 z-50 w-full border-b border-slate-800/40 bg-slate-950/50 backdrop-blur-xl">
-      <div className="mx-auto flex h-16 max-w-xl items-center justify-between px-6">
-        <Link href="/" className="group flex items-center gap-2">
-          <div className="h-6 w-6 rounded-lg bg-gradient-to-br from-teal-500 to-blue-600 shadow-lg shadow-teal-500/20 transition-transform group-hover:scale-110" />
-          <span className="text-sm font-bold tracking-tighter text-white">
-            JV
-          </span>
+    <div className="fixed top-6 left-0 z-50 flex w-full justify-center px-6">
+      <nav className="flex items-center gap-1 rounded-full border border-slate-800/50 bg-slate-900/60 p-1.5 shadow-2xl backdrop-blur-xl">
+        <Link
+          href="/"
+          className={`rounded-full px-6 py-2 text-[10px] font-black tracking-[0.2em] uppercase transition-all ${
+            pathname === '/'
+              ? 'bg-teal-500 text-slate-950 shadow-lg shadow-teal-500/20'
+              : 'text-slate-400 hover:text-white'
+          }`}
+        >
+          Add Word
         </Link>
-
-        <div className="flex items-center gap-8">
-          <Link
-            href="/"
-            className={`text-[10px] font-black tracking-[0.2em] uppercase transition-colors ${
-              pathname === '/'
-                ? 'text-teal-400'
-                : 'text-slate-500 hover:text-slate-200'
-            }`}
-          >
-            Add Word
-          </Link>
-          <Link
-            href="/dictionary"
-            className={`text-[10px] font-black tracking-[0.2em] uppercase transition-colors ${
-              pathname === '/dictionary'
-                ? 'text-teal-400'
-                : 'text-slate-500 hover:text-slate-200'
-            }`}
-          >
-            Dictionary
-          </Link>
-        </div>
-      </div>
-    </nav>
+        <Link
+          href="/dictionary"
+          className={`rounded-full px-6 py-2 text-[10px] font-black tracking-[0.2em] uppercase transition-all ${
+            pathname === '/dictionary'
+              ? 'bg-teal-500 text-slate-950 shadow-lg shadow-teal-500/20'
+              : 'text-slate-400 hover:text-white'
+          }`}
+        >
+          Dictionary
+        </Link>
+      </nav>
+    </div>
   );
 }
